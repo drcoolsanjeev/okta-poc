@@ -1,60 +1,98 @@
-# React Sample Applications for Okta
+# React Login Examples
 
-This repository contains several sample applications that demonstrate various Okta use-cases in your React application.
+This repository contains three different login examples (Okta-hosted, Sign-In Widget, and custom login form). Please read [A Quick Guide to React Login Options](https://developer.okta.com/blog/2020/12/16/react-login) to see how it was created.
 
-Each sample makes use of the [Okta React Library][].
+**Prerequisites:**
 
-If you haven't done so already, register for a free account at [developer.okta.com](https://developer.okta.com/). Select **Create Free Account** and fill in the forms to complete the registration process. Once you are done and logged in, you will see your Okta Developer Console. 
+- [Node 14](https://nodejs.org/)
+- [Okta CLI 0.7.1+](https://github.com/okta/okta-cli)
 
-> **Tip**: You can also create an account using the [Okta CLI](https://github.com/oktadeveloper/okta-cli) and `okta register`. To create an app, run `okta apps create` and use the settings below.
+> [Okta](https://developer.okta.com/) has Authentication and User Management APIs that reduce development time with instant-on, scalable user infrastructure. Okta's intuitive API and expert support make it easy for developers to authenticate, manage and secure users and roles in any application.
 
-Register your application by selecting **Applications** > **Add Application**. On the next screen, choose **Single Page App** and click **Next**.
+* [Getting Started](#getting-started)
+* [Links](#links)
+* [Help](#help)
+* [License](#license)
 
-On the following screen, edit the application settings. For React applications running in developer mode, the port number should be 8080. Configure your app as follows:
+## Getting Started
 
-* **Base URI**: `http://localhost:8080`
-* **Login redirect URI**: `http://localhost:8080/login/callback` 
-* **Logout redirect URI**: `http://localhost:8080` 
+To run this example, run the following commands:
 
-Once you have completed the form, you will be given a **client ID**. You will also need the **issuer** value for your Okta org. 
-
-The **issuer** is the URL of the authorization server that will perform authentication.  All Developer Accounts have a "default" authorization server.  The issuer is a combination of your Org URL (found in the upper right of the console home page) and `/oauth2/default`. For example, `https://dev-133337.okta.com/oauth2/default`.
-
-These values must exist as environment variables. They can be exported in the shell, or saved in a file named `testenv`, located in the same directory as this README. See [dotenv](https://www.npmjs.com/package/dotenv) for more details on this file format.
-
-```ini
-ISSUER=https://yourOktaDomain.com/oauth2/default
-CLIENT_ID=123xxxxx123
+```bash
+git clone https://github.com/oktadeveloper/okta-react-login-example.git
+cd okta-react-login-example
 ```
 
-Please find the sample that fits your use-case from the table below.
+### Create the OIDC Application in Okta
 
-| Sample | Description |
-|--------|-------------|
-| [Okta-Hosted Login](/okta-hosted-login) | A React application that will redirect the user to the Okta-Hosted login page of your Org for authentication.  The user is redirected back to the React application after authenticating. |
-| [Custom Login Page](/custom-login) | A React application that uses the Okta Sign-In Widget within the React application to authenticate the user. |
+Register for a free developer account with the following simple commands using the [Okta CLI](https://github.com/okta/okta-cli), in the project root folder:
 
-
-[Okta React Library]: https://github.com/okta/okta-react
-
-## Running the resource server
-The samples include a page which accesses a protected resource (messages). To start the sample resource server:
-
-```
-npm run resource-server
+```shell
+okta register
 ```
 
-## Running the tests
+Provide the required information. Once you register, create a client application in Okta with the following command:
 
-In addition to the other environment vars, you will need credentials for a test user. Add the values for your Okta org and user in a `testenv` file.
-
-```ini
-ISSUER=https://yourOktaDomain.com/oauth2/default
-CLIENT_ID=123xxxxx123
-USERNAME=testuser@email.com
-PASSWORD=testpass
+```shell
+okta apps create
 ```
 
-**NOTE**: The test suite expects you to use `8080` for your port number. Make sure your Okta app has the redirect URI if you want to test these samples.
+You will be prompted to select the following options:
+- Type of Application: **2: SPA**
+- Redirect URI: `http://localhost:3000/callback`
+- Logout Redirect URI: `http://localhost:3000`
 
-With these variables set, you should be able to run `npm test` and bask in the glory of passing tests.
+The application configuration will be printed to your screen:
+
+```shell
+Okta application configuration:
+Issuer:    https://dev-133320.okta.com/oauth2/default
+Client ID: 0oa5qedkihI7QcSoi357
+```
+
+Replace the values in `src/App.js` with these values.
+
+```js
+const oktaAuth = new OktaAuth({
+  issuer: 'https://{yourOktaDomain}/oauth2/default',
+  clientId: '{yourClientID}',
+  redirectUri: window.location.origin + '/callback'
+});
+```
+
+You'll also need to update `src/OktaSignInWidget.js` with your client ID.
+
+```js
+this.oktaAuth = new OktaAuth({
+  issuer: props.baseUrl,
+  clientId: '{yourClientID}',
+  pkce: true
+});
+```
+
+Start your app and you should be able to log in.
+
+```shell
+npm start
+```
+
+This example uses Okta Auth JS and gives you full customization of your login form. The [blog post](https://developer.okta.com/blog/2020/12/16/react-login) also shows how to implement Okta-hosted login and login with the Okta Sign-In Widget.
+
+You can find the code for those in the [`okta-hosted`](https://github.com/oktadeveloper/okta-react-login-example/tree/okta-hosted) and [`sign-in-widget`](https://github.com/oktadeveloper/okta-react-login-example/tree/sign-in-widget) branches.
+
+## Links
+
+This example uses the following open source libraries from Okta:
+
+* [Okta React SDK](https://github.com/okta/okta-react)
+* [Okta React SDK](https://github.com/okta/okta-signin-widget)
+* [Okta Auth JS SDK](https://github.com/okta/okta-auth-js)
+* [Okta CLI](https://github.com/okta/okta-cli)
+
+## Help
+
+Please post any questions as comments on the [blog post](https://developer.okta.com/blog/2020/12/16/react-login), or visit our [Okta Developer Forums](https://devforum.okta.com/).
+
+## License
+
+Apache 2.0, see [LICENSE](LICENSE).
