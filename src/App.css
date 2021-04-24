@@ -77,3 +77,23 @@ button:hover {
   border: 1px solid #aaaaaa;
   border-radius: 0;
 }
+table, th, td {
+  border: 1px solid black;
+  border-collapse: collapse;
+}
+
+.input_cell:focus {
+  outline: none;
+}
+
+.table_container {
+  padding: 20px;
+  overflow-x: auto;
+  overflow-y: auto;
+}
+table{
+  margin: 10px;
+}
+td {
+  height: 26px;
+}
