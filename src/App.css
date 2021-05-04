@@ -78,12 +78,15 @@ button:hover {
   border-radius: 0;
 }
 table, th, td {
-  border: 1px solid black;
+  border: 1px solid #EDEDED;
   border-collapse: collapse;
 }
-
+.input_cell{
+  padding: 0;
+  height: 26px;
+}
 .input_cell:focus {
-  outline: none;
+  outline: 1px solid blue;
 }
 
 .table_container {

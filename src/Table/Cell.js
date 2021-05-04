@@ -1,26 +1,17 @@
 import React,{useState,useEffect} from 'react';
 
-const InputCell =({cellData,rowNumber,cellNumber ,col, updateCell,updateSelection,selectedItem})=>{
+const InputCell =({cellData,rowNumber,col,cellNumber, updateCell})=>{
+    // cellData && console.log("🚀 ~ file: Cell.js ~ line 4 ~ InputCell ~ cellData", cellData)
     const [data,setData] = useState();
     const [selected,setSelected] = useState(false);
-    const [focussed,setFocussed] = useState(false);
 
     useEffect(() => {
         setData(cellData);
-        if(selectedItem.cellNumber===cellNumber && selectedItem.rowNumber===rowNumber){
-            setSelected(true);
-        }
     }, []);
 
     useEffect(() => {
-        if(selectedItem.cellNumber===cellNumber && selectedItem.rowNumber===rowNumber){
-            setSelected(true);
-        }else {
-            if(selected){
-                setSelected(false)
-            }
-        }
-    }, [selectedItem]);
+        if(JSON.stringify(data)!==JSON.stringify(cellData)){ setData(cellData)}
+    }, [cellData]);
     
     const onChange =(event)=>{
         setData(event.target.value)
@@ -31,50 +22,33 @@ const InputCell =({cellData,rowNumber,cellNumber ,col, updateCell,updateSelectio
     }
     
     const onFocusOut = () => {
-        setSelected(false);
-        setFocussed(false);
         if(cellData!==data) {
             updateCell({rowNumber,cellNumber,objKey:col.value,data});
         }
     }
 
-    const onClick =()=>{
-        setSelected(true);
-        updateSelection({rowNumber,cellNumber})
-    }
-
-    const onDoubleClick=()=>{
-        setSelected(false)
-        setFocussed(true);
-    }
-
     return(
-        <td style={{width:col.width , border:selected ? '1px solid red' : ( focussed ?'2px solid blue':'') }}>
-            {
-            !focussed? 
+        <td key={`td-${col}`}>
             <input
+                autoFocus={col===0&&rowNumber===0}
                 className="input_cell"
+                readOnly={!selected}
                 style={{ border:0,width:col.width}}
                 type="text"
-                readOnly
                 value={data}
-                onClick={onClick}
-                onDoubleClick={onDoubleClick}
+                onChange={onChange}
+                onKeyPress={(e)=>{console.log("test",e)}}
                 onBlur={onFocusOut}
-            />:
-                <input
-                    className="input_cell"
-                    style={{ border:0,width:col.width}}
-                    type="text"
-                    value={data}
-                    onChange={onChange}
-                    onBlur={onFocusOut}
-                    autoFocus
-                    onFocus={onFocus}
-                />
-            }
+                onFocus={onFocus}
+            />
         </td>
     )
 };
 
+
+const match =(prevProps,nextProps)=>{
+    return JSON.stringify(prevProps.cellData)===JSON.stringify(nextProps.cellData);
+}
+ export default React.memo(InputCell,match)
+ 
 export { InputCell };

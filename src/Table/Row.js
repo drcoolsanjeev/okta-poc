@@ -1,22 +1,28 @@
-import React from 'react';
-import { InputCell } from './Cell';
+import React, { useEffect } from 'react';
+import InputCell from './Cell';
 
 const TableRow = (props) => {
-    const {columns,row,index,updateCell,selectedItem,updateSelection}=props;
-    return(<tr>
-        <td style={{width:49, textAlign:'left',backgroundColor:'lightgray'}}>{index}</td>
+    const [stateRow,setStateRow] = React.useState([]);
+    useEffect(() => {
+       if(JSON.stringify(stateRow)!==JSON.stringify(props.row)){ setStateRow(props.row)}
+    }, [props.row]);
+    const {columns,row,index,updateCell}=props;
+    return(<tr key={`tr-${index}`}>
+        <td key={`td-${index}`} style={{width:49, textAlign:'left',backgroundColor:'#efefef'}}>{index}</td>
         {columns.map((col,colIndex)=>
             <InputCell
                 rowNumber={index}
                 cellNumber={colIndex}
                 col={col}
-                cellData={row[col.key]}
+                cellData={stateRow[col.key]}
                 updateCell={updateCell}
-                selectedItem={selectedItem}
-                updateSelection={updateSelection}
             />
         )}
     </tr>)
 }
+const match =(prevProps,nextProps)=>{
+    return JSON.stringify(prevProps.row)===JSON.stringify(nextProps.row);
+}
+export default React.memo(TableRow,match)
 
 export {TableRow}

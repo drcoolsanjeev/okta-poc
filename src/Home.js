@@ -1,7 +1,7 @@
 import React,{useState,useEffect} from 'react';
 import { Link } from 'react-router-dom';
-import {InputCell,TableHeader,TableRow} from './Table'
-
+import {TableHeader} from './Table'
+import TableRow from './Table/Row'
 const COLUMNS = [
   {key:'chrome_id',value:'chrome_id',label:'Chrome ID',width:150},
   {key:'year',value:'year',label:'Year',width:150},
@@ -20,29 +20,47 @@ const COLUMNS = [
   {key:'option',value:'option',label:'Option',width:150},
 ]
 
-const ROWS =[
-  {
-    chrome_id:'chrome_id',
-    year:'year',
-    model:'model',
-  },
-  {
-    chrome_id:'chrome_id',
-    year:'year',
-    model:'model',
-  },
-  {
-    chrome_id:'chrome_id',
-    year:'year',
-    model:'model',
-  },
-]
+const ROWS = new Array(1000).fill({
+  
+    chrome_id:'test-chrome_id',
+    year:'test-year',
+    make:'test-make',
+    model:'test-model',
+    trim:'test-trim',
+    model_code:'test-model_code',
+    drive_type:'test-drive_type',
+    body_type:'test-body_type',
+    body_class:'test-body_class',
+    fuel_type:'test-fuel_type',
+    base_invoice:'test-base_invoice',
+    base_msrp:'test-base_msrp',
+    freight:'test-freight',
+    tekion_id:'test-tekion_id',
+    option:'test-option',
+    
+})
+// [
+//   {
+//     chrome_id:'chrome_id',
+//     year:'year',
+//     model:'model',
+//   },
+//   {
+//     chrome_id:'chrome_id',
+//     year:'year',
+//     model:'model',
+//   },
+//   {
+   
+//   },
+// ]
+
 
 
 
 function Home() {
   const [rows,setRows] = useState(ROWS);
-  const [selectedItem,setSelectedItem] = useState({rowNumber:0,cellNumber:0});
+  console.log(rows)
 
   const updateCell = ({rowNumber, cellNumber, objKey, data})=>{
     setRows(prevState=>{
@@ -51,9 +69,6 @@ function Home() {
     })
   }
 
-  const updateSelection = ({rowNumber,cellNumber})=>{
-    setSelectedItem({rowNumber:rowNumber,cellNumber:cellNumber})
-  }
   return (
     <div className="page">
       <h1>Login with React</h1>
@@ -66,7 +81,11 @@ function Home() {
       <div className='table_container'>
       <table>
         <TableHeader columns={COLUMNS}/>
-        { rows.map((row,index)=><TableRow columns={COLUMNS} row={row} index={index} updateCell={updateCell} selectedItem={selectedItem} updateSelection={updateSelection}/>) }
+        { rows.map((row,index)=><TableRow key={`trow-${index}`}
+        columns={COLUMNS}
+        row={row}
+        index={index}
+        updateCell={updateCell}/>) }
         </table>
         </div>
     </div>
